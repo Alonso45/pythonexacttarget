@@ -235,6 +235,7 @@ class ExactTargetAPI:
                     except suds.WebFault:
                         continue
                     break
+        return resp
                 
     def get_object(self, objtype, props):
         rr = self.create('RetrieveRequest')
