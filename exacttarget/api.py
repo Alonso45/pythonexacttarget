@@ -5,10 +5,12 @@ import sys
 
 import suds
 from suds.client import Client
-from suds.wsse import Security, UsernameToken
+from suds.wsse import Security
+from suds.wsse import UsernameToken
 from urllib2 import URLError
 
-DEFAULT_EVURL = 'https://webservice.exacttarget.com/etframework.wsdl'
+from settings import DEFAULT_EVURL
+
 
 class ExactTargetAPI:
     def __init__(self, username, password, schema_url=None, log_path=None):
@@ -31,7 +33,8 @@ class ExactTargetAPI:
         self.logger = logging.getLogger('ExactTargetAPI')
         fh = logging.FileHandler(log_path)
         formatter = logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        )
         fh.setFormatter(formatter)
         self.logger.addHandler(fh)
 
@@ -343,7 +346,9 @@ class ExactTargetAPI:
         
         return resp.Results[0].Object
     
-    def create_data_extension_field(self, name, field_type, is_primary=False, is_nillable=False, length=None, default=None):
+    def create_data_extension_field(
+            self, name, field_type, is_primary=False, is_nillable=False, length=None, default=None
+    ):
         field = self.create('DataExtensionField')
         field.Name = name
         field.FieldType = field_type
@@ -355,7 +360,9 @@ class ExactTargetAPI:
         
         return field
     
-    def create_data_extension(self, name, key, de_fields, sender_field=None, description=None, folder=None, template=None):
+    def create_data_extension(
+            self, name, key, de_fields, sender_field=None, description=None, folder=None, template=None
+    ):
         de = self.create('DataExtension')
         de.Name = name
         de.Description = description
@@ -466,7 +473,7 @@ class ExactTargetAPI:
             pass
 
         # create the subscriber list
-        if create_if_not_exists == True:
+        if create_if_not_exists is True:
             return self.create_subscriber_list(listname)
         else:
             return None
@@ -627,7 +634,7 @@ class ExactTargetAPI:
         im = self.create('ImportDefinition')
         im.CustomerKey = key
         
-        objs = {'Definition': [im,]}
+        objs = {'Definition': [im, ]}
         
         try:
             resp = self.client.service.Perform(self.create('PerformOptions'), 'start', objs)
@@ -637,6 +644,7 @@ class ExactTargetAPI:
         if resp.OverallStatus != 'OK':
             self.log(resp, logging.ERROR)
             raise ExactTargetError(resp.RequestID, resp.Results[0].StatusMessage)
+
 
 class ExactTargetError(Exception):
     def __init__(self, request_id, message):
@@ -653,6 +661,7 @@ class ExactTargetError(Exception):
 class SoapError(Exception):
     pass
 
+
 # http://stackoverflow.com/a/1751478/271768
 def chunks(l, n):
-    return [l[i:i+n] for i in range(0, len(l), n)]
+    return [l[i:i + n] for i in range(0, len(l), n)]
