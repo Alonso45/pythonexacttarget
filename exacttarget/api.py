@@ -222,6 +222,8 @@ class ExactTargetAPI:
             except suds.WebFault:
                 continue
             break
+        
+            return resp
 
         if more_data:
             while resp.OverallStatus == 'MoreDataAvailable':
@@ -235,7 +237,8 @@ class ExactTargetAPI:
                     except suds.WebFault:
                         continue
                     break
-        return resp
+                
+                return resp
                 
     def get_object(self, objtype, props):
         rr = self.create('RetrieveRequest')
