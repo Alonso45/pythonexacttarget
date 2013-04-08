@@ -19,4 +19,15 @@ api_object.init_client()
 api_object.add_to_data_extension(
     'data_extension_id', [{'customer_email_address': 'customer@customer.com', 'product': '678'}]
 )
+
+# Retrieve data for data extension
+objtype = 'DataExtensionObject[' + data_extension_id + ']'
+cols = ['customer_email_address']
+
+
+api_object.get_object(
+    objtype,
+    cols
+)
+
 ```
